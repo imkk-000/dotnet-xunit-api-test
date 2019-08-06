@@ -30,11 +30,16 @@ namespace dotnet_xunit_api_test
             };
             // Act
             var response = await callAPIHelper.GetAsync("https://jsonplaceholder.typicode.com/todos/1");
-            var actualTodo = await response.Content.ReadAsStringAsync();
+            var responseString = await response.Content.ReadAsStringAsync();
+            var actualTodo = JsonConvert.DeserializeObject<Todo>(responseString);
 
             // Assertion
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(actualTodo, actualTodo);
+            Assert.NotNull(actualTodo);
+            Assert.Equal(expectedTodo.userId, actualTodo.userId);
+            Assert.Equal(expectedTodo.id, actualTodo.id);
+            Assert.Equal(expectedTodo.title, actualTodo.title);
+            Assert.Equal(expectedTodo.completed, actualTodo.completed);
         }
     }
 }
